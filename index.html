@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
     <title>Calendar</title>
 
     <style>
@@ -11,13 +11,11 @@
     display: none;
 }
 
-/* --- RESPONSIVE SETUP --- */
+/* --- GLOBAL MONOSPACE FONT --- */
 body {
-    font-family: monospace; 
+    font-family: monospace; /* Applies to EVERYTHING now */
     background-color: #ffffff;
     height: 100vh;
-    width: 100vw;
-    margin: 0; /* Important: removes default browser margins */
     overflow: hidden; 
 }
 
@@ -26,8 +24,7 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
+    min-height: 100%;
 }
 
 button::-moz-focus-inner { 
@@ -36,22 +33,19 @@ button::-moz-focus-inner {
 }
 
 #calendari {
+    margin: 20px 0;
     position: relative;
     overflow: hidden;
-    /* Fill the Notion Block completely */
-    height: 100%;  
-    width: 100%;   
-    /* Font size scales with the size of the block (4% of viewport) */
-    font-size: 4.5vmin; 
+    height: 350px;  
+    width: 300px;   
+    font-size: 13px; 
 }
 
 table {
     border-collapse: collapse;
     table-layout: fixed;
-    /* Fill the container */
-    width: 100%; 
-    height: 100%;
-    
+    width: 300px; 
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.2); 
     background-color: #fff;
     position: absolute;
     top: 0;
@@ -59,31 +53,27 @@ table {
     transform: translateX(0);
     transition: all 0.3s ease;
 }
-
-/* --- ANIMATIONS NOW USE % INSTEAD OF PIXELS --- */
 table.actiu {
-    transform: translateX(0px);
+    transform: translateX(0px)top;
 }
 table.inactiu {
     transition: all 0.3s 0.01s ease;
 }
 table.amagat-esquerra {
-    transform: translateX(-100%); /* Slides completely to the left */
+    transform: translateX(-300px);
 }
 table.amagat-dreta {
-    transform: translateX(100%);  /* Slides completely to the right */
+    transform: translateX(300px);
 }
-/* ---------------------------------------------- */
-
 td,th {
     text-align: center;
     background-color: #fff;
 }
 th {
-    padding: 1vmin; /* Padding scales with size */
+    padding: 8px; 
 }
 tr:first-child th {
-    font-size: 6vmin; /* Title scales larger */
+    font-size: 18px; 
     font-weight: bold;
     border-left: none;
     border-top: none;
@@ -101,14 +91,14 @@ th {
     font-weight: normal;
 }
 th .any {
-    font-size: 3vmin;
+    font-size: 10px;
     font-weight: normal;
     display: block;
     text-shadow: none;
     color: rgba(0,0,0,0.4);
 }
 tr:nth-child(2) th {
-    padding: 1vmin;
+    padding: 5px;
 }
 td {
     padding: 0;
@@ -116,17 +106,11 @@ td {
 }
 td>span {
     color: #555;
-    padding: 1vmin; /* Padding scales with size */
+    padding: 8px; 
     display: block;
     border: 2px solid transparent;
     transition: border 0.3s ease;
-    font-weight: 600; 
-    height: 100%; /* Ensure click area fills cell */
-    
-    /* Flexbox to center text vertically/horizontally in the cell */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-weight: 600; /* Keeps the dates slightly bold */
 }
 
 td:nth-child(even)>span {
@@ -150,27 +134,27 @@ td > span:hover {
     color: #fff;
 }
 
-/* --- CENTERED ARROWS (RESPONSIVE) --- */
+/* --- CENTERED ARROWS --- */
 .boto-next, .boto-prev {
     background: rgba(0,0,0,0.1);
     color: #fff;
     font-family: inherit;
     border: none;
-    font-size: 5vmin; /* Arrow icon scales */
+    font-size: 16px;
     font-weight: bold;
     text-shadow: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 0; 
-    height: 8vmin; /* Button size scales */
-    width: 8vmin;
+    height: 25px;
+    width: 25px;
     border-radius: 100%;
     position: absolute;
-    top: 3vmin; /* Position scales */
+    top: 14px; 
 }
-.boto-next { right: 2vmin; }
-.boto-prev { left: 2vmin; }
+.boto-next { right: 10px; }
+.boto-prev { left: 10px; }
 /* ----------------------- */
 
 .boto-next:hover,
@@ -197,9 +181,9 @@ footer a:link {
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div class="">
         <div id="calendari"></div>
-    </div>
+      </div>
       <script>
         var mesos = [
     'January',
