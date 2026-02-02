@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- original:https://codepen.io/boudra/pen/raErwP -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,28 +7,18 @@
     <title>Calendar</title>
 
     <style>
-/* --- NO SCROLLBAR FIX --- */
-::-webkit-scrollbar {
-    display: none;
-}
-
-/* --- RESPONSIVE SETUP --- */
 body {
-    font-family: monospace; 
-    background-color: #ffffff;
-    height: 100vh;
-    width: 100vw;
-    margin: 0; /* Important: removes default browser margins */
-    overflow: hidden; 
+    font-family: 'Arial', sans-serif;
+    background-color: #3b323f;
+  height: 100vh;
 }
 
 .wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 button::-moz-focus-inner { 
@@ -36,22 +27,19 @@ button::-moz-focus-inner {
 }
 
 #calendari {
+    margin: 20px 0;
     position: relative;
     overflow: hidden;
-    /* Fill the Notion Block completely */
-    height: 100%;  
-    width: 100%;   
-    /* Font size scales with the size of the block (4% of viewport) */
-    font-size: 4.5vmin; 
+    height: 310px;
+    width: 350px;
+    font-size: 14px;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.4);
 }
-
 table {
     border-collapse: collapse;
     table-layout: fixed;
-    /* Fill the container */
-    width: 100%; 
-    height: 100%;
-    
+    width: 350px;
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.2);
     background-color: #fff;
     position: absolute;
     top: 0;
@@ -59,31 +47,27 @@ table {
     transform: translateX(0);
     transition: all 0.3s ease;
 }
-
-/* --- ANIMATIONS NOW USE % INSTEAD OF PIXELS --- */
 table.actiu {
-    transform: translateX(0px);
+    transform: translateX(0px)top;
 }
 table.inactiu {
     transition: all 0.3s 0.01s ease;
 }
 table.amagat-esquerra {
-    transform: translateX(-100%); /* Slides completely to the left */
+    transform: translateX(-299px);
 }
 table.amagat-dreta {
-    transform: translateX(100%);  /* Slides completely to the right */
+    transform: translateX(300px);
 }
-/* ---------------------------------------------- */
-
 td,th {
     text-align: center;
     background-color: #fff;
 }
 th {
-    padding: 1vmin; /* Padding scales with size */
+    padding: 10px;
 }
 tr:first-child th {
-    font-size: 6vmin; /* Title scales larger */
+    font-size: 20px;
     font-weight: bold;
     border-left: none;
     border-top: none;
@@ -101,14 +85,14 @@ th {
     font-weight: normal;
 }
 th .any {
-    font-size: 3vmin;
+    font-size: 12px;
     font-weight: normal;
     display: block;
     text-shadow: none;
     color: rgba(0,0,0,0.4);
 }
 tr:nth-child(2) th {
-    padding: 1vmin;
+    padding: 5px;
 }
 td {
     padding: 0;
@@ -116,17 +100,10 @@ td {
 }
 td>span {
     color: #555;
-    padding: 1vmin; /* Padding scales with size */
+    padding: 10px;
     display: block;
     border: 2px solid transparent;
     transition: border 0.3s ease;
-    font-weight: 600; 
-    height: 100%; /* Ensure click area fills cell */
-    
-    /* Flexbox to center text vertically/horizontally in the cell */
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 td:nth-child(even)>span {
@@ -149,30 +126,25 @@ td > span:hover {
     background: #d1ecff;
     color: #fff;
 }
-
-/* --- CENTERED ARROWS (RESPONSIVE) --- */
 .boto-next, .boto-prev {
     background: rgba(0,0,0,0.1);
     color: #fff;
     font-family: inherit;
     border: none;
-    font-size: 5vmin; /* Arrow icon scales */
+    font-size: 18px;
     font-weight: bold;
     text-shadow: inherit;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0; 
-    height: 8vmin; /* Button size scales */
-    width: 8vmin;
+    padding: 2px 10px 5px 10px;
+    line-height: 1px;
+    height: 30px;
+    width: 30px;
+    vertical-align: middle;
     border-radius: 100%;
     position: absolute;
-    top: 3vmin; /* Position scales */
+    top: 15px;
 }
-.boto-next { right: 2vmin; }
-.boto-prev { left: 2vmin; }
-/* ----------------------- */
-
+.boto-next { right: 10px; padding-left: 13px; }
+.boto-prev { left: 10px; padding-right: 13px;}
 .boto-next:hover,
 .boto-prev:hover {
     background: rgba(0,0,0,0.2);
@@ -197,9 +169,9 @@ footer a:link {
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div class="">
         <div id="calendari"></div>
-    </div>
+      </div>
       <script>
         var mesos = [
     'January',
@@ -243,30 +215,35 @@ Number.prototype.pad = function(num) {
     return str += this.toString();
 }
 
-function calendari(widget, data, direction)
+function calendari(widget, data)
 {
+
     var original = widget.getElementsByClassName('actiu')[0];
 
     if(typeof original === 'undefined')
     {
         original = document.createElement('table');
         original.setAttribute('data-actual',
-              data.getFullYear() + '/' +
-              (data.getMonth() + 1).pad(2) + '/' +
-              data.getDate().pad(2))
+			      data.getFullYear() + '/' +
+			      data.getMonth().pad(2) + '/' +
+			      data.getDate().pad(2))
         widget.appendChild(original);
     }
 
+    var diff = data - new Date(original.getAttribute('data-actual'));
+
+    diff = new Date(diff).getMonth();
+
     var e = document.createElement('table');
 
-    e.className = direction === -1 ? 'amagat-esquerra' : 'amagat-dreta';
+    e.className = diff  === 0 ? 'amagat-esquerra' : 'amagat-dreta';
     e.innerHTML = '';
 
     widget.appendChild(e);
 
     e.setAttribute('data-actual',
                    data.getFullYear() + '/' +
-                   (data.getMonth() + 1).pad(2) + '/' +
+                   data.getMonth().pad(2) + '/' +
                    data.getDate().pad(2))
 
     var fila = document.createElement('tr');
@@ -289,12 +266,12 @@ function calendari(widget, data, direction)
 
     boto_prev.onclick = function() {
         data.setMonth(data.getMonth() - 1);
-        calendari(widget, data, -1);
+        calendari(widget, data);
     };
 
     boto_next.onclick = function() {
         data.setMonth(data.getMonth() + 1);
-        calendari(widget, data, 1);
+        calendari(widget, data);
     };
 
     fila.appendChild(titol);
@@ -310,34 +287,39 @@ function calendari(widget, data, direction)
     fila.innerHTML += '<th>' + dies_abr[0] + '</th>';
     e.appendChild(fila);
 
+    /* Obtinc el dia que va acabar el mes anterior */
     var inici_mes =
         new Date(data.getFullYear(), data.getMonth(), -1).getDay();
 
     var actual = new Date(data.getFullYear(),
-              data.getMonth(),
-              -inici_mes);
+			  data.getMonth(),
+			  -inici_mes);
 
+    /* 6 setmanes per cobrir totes les posiblitats
+     *  Quedaria mes consistent alhora de mostrar molts mesos 
+     *  en una quadricula */
     for(var s = 0; s < 6; s++)
     {
         var fila = document.createElement('tr');
 
         for(var d = 1; d < 8; d++)
         {
-        var cela = document.createElement('td');
-        var span = document.createElement('span');
+	    var cela = document.createElement('td');
+	    var span = document.createElement('span');
 
-        cela.appendChild(span);
+	    cela.appendChild(span);
 
             span.innerHTML = actual.getDate();
 
             if(actual.getMonth() !== data.getMonth())
                 cela.className = 'fora';
 
+            /* Si es avui el decorem */
             if(data.getDate() == actual.getDate() &&
-               data.getMonth() == actual.getMonth())
-        cela.className = 'avui';
+	       data.getMonth() == actual.getMonth())
+		cela.className = 'avui';
 
-        actual.setDate(actual.getDate()+1);
+	    actual.setDate(actual.getDate()+1);
             fila.appendChild(cela);
         }
 
@@ -347,7 +329,7 @@ function calendari(widget, data, direction)
     setTimeout(function() {
         e.className = 'actiu';
         original.className +=
-        direction === -1 ? ' amagat-dreta' : ' amagat-esquerra';
+        diff === 0 ? ' amagat-dreta' : ' amagat-esquerra';
     }, 20);
 
     original.className = 'inactiu';
